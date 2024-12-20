@@ -53,10 +53,10 @@ def main():
 
     # 确认需要验证的相似K线所处的时间段
     start_time = '1990/01/01'
-    end_time = '2024/12/18'
+    end_time = '2024/12/20'
 
     # 确认需要验证哪个股票
-    stock_name = 'SH601118'
+    stock_name = 'sz603220 '
 
     # 直接在当前目录存储数据
     base_path = os.path.dirname(os.path.abspath(__file__))  # 获取当前文件所在目录
