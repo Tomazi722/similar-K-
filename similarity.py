@@ -342,12 +342,11 @@ def cal_for_pic(row, file_path, future_days):
 
 def draw_data(data, future_pics, length, stock_start_time, stock_end_time, future_days, index_df):
     future_pics = future_pics + 1
-    if stock_start_time != None:
+    if stock_start_time is not None:
         length = len(index_df[(index_df['交易日期'] >= pd.to_datetime(stock_start_time)) &
                               (index_df['交易日期'] <= pd.to_datetime(stock_end_time))])
 
     fixed_k_lines = length + future_days
-    # print(data)
     # 确保交易日期为 datetime 格式
     data['交易日期'] = pd.to_datetime(data['交易日期'])
     data['startdate'] = pd.to_datetime(data['startdate'])
@@ -404,7 +403,6 @@ def draw_data(data, future_pics, length, stock_start_time, stock_end_time, futur
         mpf.plot(stock_data, type='candle', ax=ax, style=s)
         # 设置标题和标签
         enddate = stock_data['enddate'].iloc[0]
-        # print(stock_data)
         R = round(stock_data['r'].iloc[0], 4)
         enddate = pd.to_datetime(enddate).date()
         if R == 100:
@@ -421,4 +419,9 @@ def draw_data(data, future_pics, length, stock_start_time, stock_end_time, futur
     # 调整子图之间的间距
     plt.subplots_adjust(hspace=1)  # hspace 设置垂直间距
 
-    plt.show()
+    # 保存图表到文件
+    output_filename = f'stock_analysis_plots_{pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")}.png'
+    plt.savefig(output_filename)
+    plt.close()
+    print(f"图表已保存为 {output_filename}")
+
