@@ -1,16 +1,17 @@
 name: Run Stock Analysis Script
 
+# 触发工作流程的事件
 on:
   push:
     branches:
-      - main
+      - main  # 当推送到 main 分支时触发
   schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+    - cron: '0 0 * * *'  # 每天凌晨12点触发一次
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   run-script:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 运行环境
 
     steps:
     - name: 检出代码仓库
@@ -19,12 +20,12 @@ jobs:
     - name: 设置 Python 版本
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.9'  # 指定您需要的 Python 版本
 
     - name: 升级 pip
       run: pip install --upgrade pip
 
-    - name: Cache pip
+    - name: 缓存 pip 依赖项
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
@@ -34,12 +35,20 @@ jobs:
 
     - name: 安装依赖项
       run: |
-        if [ -f requirements.txt ]; then
-          pip install -r requirements.txt
-        else
-          pip install akshare pandas
-          # 根据需要添加其他依赖项
-        fi
+        pip install -r requirements.txt
 
     - name: 运行 Python 脚本
       run: python 相似K线计算代码.py
+
+    - name: 上传输出文件
+      uses: actions/upload-artifact@v3
+      with:
+        name: stock-analysis-outputs
+        path: |
+          SH601118.csv
+          D_0_相识度计算结果.csv
+          stock_analysis_plots_*.png  # 上传所有匹配的图表文件
+
+    - name: 显示分析结果
+      run: |
+        echo "分析结果已生成并上传为 Artifacts。"
